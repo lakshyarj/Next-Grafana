@@ -1,0 +1,1 @@
+{"results":{"A":{"status":200,"frames":[{"schema":{"name":"A","refId":"A","meta":{"typeVersion":[0,0],"preferredVisualisationType":"table","executedQueryString":"SELECT 1"},"fields":[{"name":"1","type":"number","typeInfo":{"frame":"uint8"}}]},"data":{"values":[[1]]}}]}}}

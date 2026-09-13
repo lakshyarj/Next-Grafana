@@ -1,0 +1,216 @@
+/* Shared chrome: header, breadcrumb, main container, page primitives. */
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* Max-width container. Side padding is 1rem (16px) at every viewport width. */
+.container {
+  width: 100%;
+  max-width: 1120px;
+  margin-inline: auto;
+  padding-inline: var(--space-4);
+}
+
+.headerBar {
+  display: flex;
+  /* Without wrapping, the wordmark and nav overflow horizontally on a 320-360px
+     phone rather than reflowing. */
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-4);
+  /* min-height, not height: the bar must be able to grow when the nav wraps
+     onto a second row instead of clipping it. */
+  min-height: var(--header-height);
+  padding-block: var(--space-1);
+}
+
+.wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-text);
+  font-size: 1rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+}
+
+.wordmark:hover {
+  color: var(--color-accent);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.navLink {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.navLink:hover {
+  background-color: var(--color-surface-raised);
+  color: var(--color-text);
+}
+
+/* Static, server-rendered trail for the top level of the app. Dashboard pages
+   render their own breadcrumb region below this one. */
+.breadcrumbBar {
+  border-top: 1px solid var(--color-border);
+  padding-block: var(--space-2);
+}
+
+.breadcrumbList {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.8125rem;
+}
+
+.breadcrumbItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-text-muted);
+}
+
+.breadcrumbSeparator {
+  color: var(--color-border);
+}
+
+.breadcrumbLink {
+  color: var(--color-text-muted);
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+}
+
+.breadcrumbLink:hover {
+  color: var(--color-text);
+  text-decoration: underline;
+}
+
+.breadcrumbCurrent {
+  color: var(--color-text);
+  font-weight: 500;
+}
+
+.main {
+  padding-block: var(--space-6);
+}
+
+/* ---- Page primitives, shared by the server-rendered pages ---- */
+
+.page {
+  max-width: 46rem;
+}
+
+.pageWide {
+  max-width: none;
+}
+
+.pageTitle {
+  margin-bottom: var(--space-3);
+  font-size: clamp(1.75rem, 4vw, 2.375rem);
+  font-weight: 680;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.pageLead {
+  margin-bottom: var(--space-5);
+  color: var(--color-text-muted);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding-inline: var(--space-5);
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 120ms ease, box-shadow 120ms ease,
+    border-color 120ms ease;
+}
+
+.buttonPrimary {
+  background-color: var(--color-accent);
+  color: var(--color-accent-fg);
+  box-shadow: var(--shadow-sm);
+}
+
+.buttonPrimary:hover {
+  box-shadow: var(--shadow-md);
+  filter: brightness(1.08);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button {
+    transition: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Narrow viewports and touch input
+   --------------------------------------------------------------------------- */
+
+/* Tap targets. Padding plus font-size alone leaves the header chrome roughly
+   28px tall — below the 44px (2.75rem) minimum for comfortable tapping, and
+   small enough to mis-tap. Growing the hit area here rather than in the base
+   rules keeps the desktop header visually unchanged. */
+@media (max-width: 48rem), (pointer: coarse) {
+  .wordmark,
+  .navLink {
+    min-height: 2.75rem;
+  }
+
+  .breadcrumbList a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+  }
+}
+
+/* Very narrow screens (<=416px): drop the header type a step so the wordmark and
+   the nav still share one row on a 320-360px phone. The wrapping on
+   `.headerBar` is the safety net if they still do not fit. */
+@media (max-width: 26rem) {
+  .wordmark {
+    font-size: 0.9375rem;
+  }
+
+  .navLink {
+    padding-inline: var(--space-1);
+    font-size: 0.8125rem;
+  }
+}

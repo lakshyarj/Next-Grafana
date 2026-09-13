@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+.pnp/
+.pnp.js
+
+# Next.js
+.next/
+out/
+dist/
+build/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Logs and coverage
+*.log
+logs/
+coverage/
+.nyc_output/
+
+# Caches
+.cache/
+.turbo/
+.vercel/
+
+# Testing and reports
+playwright-report/
+test-results/
+
+# Editor and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Generated assets
+*.tsbuildinfo
+next-env.d.ts

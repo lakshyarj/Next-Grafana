@@ -1,0 +1,266 @@
+/*
+ * Page shell for /dashboards/[dashboardId] — shared by page.tsx, loading.tsx,
+ * and the in-page Suspense fallback.
+ *
+ * Height contract: the embed and its skeleton are sized from the viewport, so
+ * `--page-chrome` (everything the page draws around the dashboard) is declared
+ * here, once, on `.page`. It inherits down into DashboardFrame.module.css,
+ * which is why the two files cannot drift apart.
+ */
+
+.page {
+  /* Page padding + breadcrumb row + heading + description + toolbar + gaps.
+     A close estimate is enough: `min-height` on the embed is the real floor,
+     and a few pixels of slack only mean a little breathing room. */
+  --page-chrome: 13rem;
+  /* Height the dashboard (and therefore the skeleton) occupies. */
+  --dashboard-height: calc(100dvh - var(--header-height) - var(--page-chrome));
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  padding: var(--space-5) var(--space-5) var(--space-6);
+}
+
+@media (max-width: 48rem) {
+  .page {
+    /* Keep the side gutter at 16px (--space-4). It was --space-3 (12px), which
+       puts content closer to the screen edge than intended on a phone. */
+    padding: var(--space-4) var(--space-4) var(--space-5);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Breadcrumb row
+   --------------------------------------------------------------------------- */
+
+.breadcrumbRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-4);
+}
+
+.breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.breadcrumbItem {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.breadcrumbLink {
+  color: var(--color-text-muted);
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  padding: 0.125rem 0;
+}
+
+.breadcrumbLink:hover {
+  color: var(--color-text);
+  text-decoration: underline;
+}
+
+.breadcrumbLink:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.breadcrumbSeparator {
+  color: var(--color-text-muted);
+  opacity: 0.6;
+}
+
+.breadcrumbCurrent {
+  color: var(--color-text);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+/* ---------------------------------------------------------------------------
+   Back to the list — an explicit, always-visible affordance, not a browser-back
+   hint. Rendered as a bordered control so it reads as clickable on every
+   pointer style, and focus-visible keeps it keyboard reachable.
+   --------------------------------------------------------------------------- */
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.5;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease;
+}
+
+.backLink:hover {
+  background: var(--color-surface-raised);
+  border-color: var(--color-accent);
+}
+
+.backLink:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------------------------
+   Heading
+   --------------------------------------------------------------------------- */
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+  overflow-wrap: anywhere;
+}
+
+.description {
+  margin: 0;
+  max-width: 70ch;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+/* ---------------------------------------------------------------------------
+   Skeleton
+   --------------------------------------------------------------------------- */
+
+.skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.skeletonToolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.skeletonBar {
+  display: block;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-raised);
+}
+
+.skeletonTitleBar {
+  width: 12rem;
+  max-width: 100%;
+  height: 1.5rem;
+}
+
+.skeletonTextBar {
+  width: 9rem;
+  max-width: 100%;
+  height: 1.75rem;
+}
+
+.skeletonWideBar {
+  width: 32rem;
+  max-width: 100%;
+  height: 1rem;
+}
+
+.skeletonButton {
+  width: 5.5rem;
+  height: 1.75rem;
+}
+
+/* Same box as the real embed: `--dashboard-height` also sizes the frame in
+   DashboardFrame.module.css, so swapping skeleton for dashboard does not move
+   anything. The floor matches the frame's own min-height. */
+.skeletonPanel {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  height: var(--dashboard-height);
+  min-height: 480px;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-raised);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Sweeping highlight — one composited layer, no layout work per frame. */
+.skeletonPanel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, var(--color-surface), transparent);
+  transform: translateX(-100%);
+  animation: skeletonShimmer 1600ms ease-in-out infinite;
+}
+
+@keyframes skeletonShimmer {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@media (max-width: 40rem) {
+  .skeletonPanel {
+    height: 70dvh;
+    min-height: 420px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeletonPanel::after {
+    animation: none;
+  }
+
+  .backLink {
+    transition: none;
+  }
+}
+
+/* Tap targets. The breadcrumb links and the "Back to dashboard list" control
+   stand roughly 24px tall from padding plus font alone, below the 44px
+   (2.75rem) minimum for comfortable tapping. */
+@media (max-width: 48rem), (pointer: coarse) {
+  .breadcrumbLink,
+  .backLink {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+  }
+}

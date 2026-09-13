@@ -1,0 +1,170 @@
+/*
+ * Embed shell: toolbar + viewport for DashboardFrame.tsx.
+ *
+ * Sizing: the viewport fills the space left after the header and the page's own
+ * chrome, using dvh so mobile browser chrome collapsing does not cause a jump.
+ * `--page-chrome` is inherited from `.page` in embed.module.css (the 13rem here
+ * is only a fallback for rendering the frame outside that page); the skeleton
+ * in that file is sized from the identical expression, so the two stay aligned.
+ */
+
+.frame {
+  --toolbar-height: 2.75rem;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* ---------------------------------------------------------------------------
+   Toolbar — deliberately quiet: small type, muted colour, no chrome of its own,
+   so the dashboard remains the focus of the page.
+   --------------------------------------------------------------------------- */
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-4);
+  min-height: var(--toolbar-height);
+  min-width: 0;
+}
+
+.toolbarTitle {
+  margin: 0;
+  /* 0.75rem was small enough to be hard to read on a phone; the uppercase
+     tracking compensates for the extra size at the top end. */
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  overflow-wrap: anywhere;
+}
+
+.toolbarActions {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.reloadButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.5;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 120ms ease, border-color 120ms ease;
+}
+
+.reloadButton:hover {
+  background: var(--color-surface-raised);
+  border-color: var(--color-accent);
+}
+
+.reloadButton:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.5;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 120ms ease;
+}
+
+.backLink:hover {
+  color: var(--color-text);
+  text-decoration: underline;
+}
+
+.backLink:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------------------------
+   Viewport
+   --------------------------------------------------------------------------- */
+
+.viewport {
+  position: relative;
+  width: 100%;
+  /* Both of these matter: Grafana can render a wide panel grid, and without
+     them a wide dashboard would push the whole page sideways. */
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  height: calc(100dvh - var(--header-height) - var(--page-chrome, 13rem));
+  min-height: 480px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-raised);
+  box-shadow: var(--shadow-sm);
+}
+
+/* The library's own wrapper, then the frame itself: both fill the box. */
+.viewport > * {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+}
+
+.viewport iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* On short/narrow screens give the page back some room rather than asking the
+   embed for a full viewport it cannot have. `dvh` keeps that honest while the
+   mobile address bar is expanded. */
+@media (max-width: 40rem) {
+  .viewport {
+    height: 70dvh;
+    min-height: 420px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reloadButton,
+  .backLink {
+    transition: none;
+  }
+}
+
+/* Tap targets. The toolbar controls stand roughly 26px tall from padding plus
+   font alone — below the 44px (2.75rem) minimum for comfortable tapping, and
+   easy to mis-hit on a phone. */
+@media (max-width: 48rem), (pointer: coarse) {
+  .reloadButton,
+  .backLink {
+    min-height: 2.75rem;
+    padding-inline: var(--space-4);
+  }
+}
