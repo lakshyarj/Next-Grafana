@@ -57,42 +57,14 @@ export interface DashboardDefinition {
  */
 export const DASHBOARDS: readonly DashboardDefinition[] = [
   {
-    id: 'batch-report',
-    uid: 'ad8hd5sh',
-    title: 'Batch Report',
+    id: 'dashboards',
+    uid: 'YOUR_HASH',
+    title: 'YOUR_TITLE',
     description:
-      'Per-batch production detail: yields, cycle times, and quality metrics for a single batch run.',
-    category: 'Production',
+      '',
+    category: 'Dashboards',
     defaultFrom: 'now-7d',
-  },
-  {
-    id: 'batch-comparison',
-    uid: 'adrpb69',
-    title: 'Batch-to-Batch Comparison',
-    description:
-      'Side-by-side comparison of two or more batches to isolate drift in yield, throughput, or downtime.',
-    category: 'Production',
-    defaultFrom: 'now-30d',
-  },
-  {
-    id: 'oee',
-    uid: 'ad8hd5h',
-    title: 'OEE',
-    description:
-      'Overall Equipment Effectiveness: availability, performance, and quality, rolled up by line and shift.',
-    category: 'Performance',
-    defaultFrom: 'now-7d',
-    defaultRefresh: '30s',
-  },
-  {
-    id: 'golden-batch',
-    uid: 'addrp',
-    title: 'Golden Batch',
-    description:
-      'Compare a test batch with golden batches across process parameters including pressure, speed, temperature, and torque.',
-    category: 'Quality',
-    defaultFrom: 'now-30m',
-  },
+  }
 ];
 
 /** Type guard: is this string one of our known dashboard ids? */
