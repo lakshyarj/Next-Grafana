@@ -11,10 +11,7 @@
 
 /** Grafana dashboard UIDs. Kept as a union so a typo fails at compile time. */
 export const DASHBOARD_IDS = [
-  'batch-report',
-  'batch-comparison',
-  'oee',
-  'golden-batch',
+  'dashboards'
 ] as const;
 
 export type DashboardId = (typeof DASHBOARD_IDS)[number];
